@@ -1,0 +1,265 @@
+//HTML
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Form Validation</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="dcterms.rightsHolder" content="Doug Bennett" />
+<meta name="dcterms.dateCopyrighted" content="2017" />
+<meta name="description" content="A short description of the page" />
+<meta name="keywords" content="keywords describing this page, most search engines 
+ignore this now due to abuse"/>
+<script src="validator.js"></script>
+<script src="validatefunctions.js"></script>
+<script> 
+//<![CDATA[ 
+//Documenting your code 
+//with comments is a good thing.
+//put you code here
+//]]>
+</script>
+</head>
+<body>
+<h1> Doug's Form Validation Page </h1>
+<form method="get" action="#">
+<select name="stress" id="stressmenu"></select>
+<span id="ddl-error">*</span>
+<br>
+<br />
+<label for="name">Your Name: </label>
+	<input type="text" name="uname" id="name"><br>
+	<span id="name-error">*</span>
+<br>
+<br>
+<label for="quantity"> Quantity: </label>
+	<input type="text" name="daquan" id="quantity"><br>
+	<span id="quantity-error">*</span>
+<br>
+<br>
+<label for="shhpass"> Password: </label> 
+	<input type="password" name="secret" id="shhpass"><br>
+	<span id="pass-error">*</span>
+<br>
+<br>
+<fieldset id="bands">
+<legend>Choose the World's Okayest band</legend>
+<input type="radio" name="bandchoice" value="nickel"/> Nickelback <br/>
+<input type="radio" name="bandchoice" value="wheeze"/> Weezer <br/>
+<input type="radio" name="bandchoice" value="dave"/> Dave Matthews Band <br/>
+<input type="radio" name="bandchoice" value="steve"/> Steve Miller Band <br/>
+<input type="radio" name="bandchoice" value="charlotte"/> Good Charlotte <br/>
+<input type="radio" name="bandchoice" value="oasis"/> Oasis <br/>
+<input type="radio" name="bandchoice" value="papa"/> Papa Roach <br/>
+<span id="band-choose-error">*</span>
+</fieldset>
+<fieldset id="schneider">
+<legend>Choose your favorite Rob Schneider movie</legend>
+<input type="radio" name="moviechoice" value="deuce"/> Deuce Bigalow <br/>
+<input type="radio" name="moviechoice" value="animal"/> The Animal <br/>
+<input type="radio" name="moviechoice" value="hotchick"/> The Hot Chick <br/>
+<input type="radio" name="moviechoice" value="stapler"/> The Stapler <br/>
+<input type="radio" name="moviechoice" value="carrot"/> A Carrot <br/>
+<input type="radio" name="moviechoice" value="der"/> Der <br/>
+<input type="radio" name="moviechoice" value="tump"/> Tump ta Tittly Tump Ta Too <br/>
+<span id="schneider-choose-error">*<!--you must choose a movie....Or don't, it's your choice.--></span>
+</fieldset>
+<label for="sandcheck">Do you like Adam Sandler?</label>
+<input type="checkbox" name="sandler" id="sandcheck" value="yes" checked="checked" />
+<span id="sanderror"></span>
+</br>
+<p> What is your favorite thing about Adam Sandler other than Jack and Jill?</p>
+<span id="remaining">*</span><br>
+<textarea name="commenthere" cols="40" rows="20" id="favthings">
+</textarea></br>
+
+<input type="submit" name="submitted" value="Submit"></br>
+<input type="reset" name="resetall" value="Reset"></br>
+</form>
+
+<div id="validator">
+<a href="http://validator.w3.org/nu/?doc=https://nbtl.mesacc.edu/username/directories/filename.html">
+HTML 5 Validation</a>
+</div>
+</body>
+</html>
+
+// validator.js
+
+window.onload = createValidator;
+function createValidator(linkId)
+{
+var myURL = window.location.href;
+var validatorLink = '<a href="http://validator.w3.org/nu/?doc=';
+validatorLink += myURL;
+validatorLink += '">HTML 5 Validator</a>';
+console.log(validatorLink);
+document.getElementById('validator').innerHTML = validatorLink;
+}
+
+// validatefunctions.js
+
+window.onload = function()
+{
+	document.forms[0].onsubmit = checkfields;
+	
+	createMenu(1, 10, 'On a scale from 1 to 10, how stressed are you?', 'stressmenu');
+	document.getElementById('stressmenu').onchange = stresscheck;
+	document.getElementById('name').onkeyup = fnamecheck;
+	document.getElementById('quantity').onkeyup = quantitycheck;
+	document.getElementById('shhpass').onkeyup = passcheck;
+	document.getElementById('bands').onclick = bandcheck;
+	document.getElementById('bands').onmouseover = bandcheck;
+	document.getElementById('schneider').onclick = schneidercheck;
+	document.getElementById('schneider').onmouseover = schneidercheck;
+	document.getElementById('sandcheck').onclick = sandlercheck;
+	document.getElementById('favthings').onkeyup = jackjilltextcheck;
+	//note if we can use event targets we can use ONE function
+	//but not today
+
+}
+
+function checkfields()
+{
+	stresscheck();
+	fnamecheck();
+	quantitycheck();
+	passcheck();
+	bandcheck();
+	schneidercheck();
+	sandlercheck();
+	jackjilltextcheck();
+	return false;
+}
+
+
+function createMenu(start, end, mnuMsg, targetID)
+{
+	var strMsg = '<option value="">' + mnuMsg + '</option>';
+	var counter = start;
+	while ( counter <= end)
+	{
+		strMsg += '<option value="' + counter + '">' + counter + '</option>';
+		counter++;
+	}
+	document.getElementById(targetID).innerHTML = strMsg;
+}
+
+function stresscheck()
+{
+	var stressmenu = document.getElementById('stressmenu');
+	var stressSelect = stressmenu.options[stressmenu.selectedIndex].value;
+	if (stressSelect <= 10 && stressSelect >= 1)
+	{
+		strMsg = "Remember to breathe";
+	}
+	else
+	{
+		strMsg = "Please choose a number";
+	}
+	document.getElementById('ddl-error').innerHTML = strMsg;
+}
+
+function fnamecheck()
+{
+	var fnamevar = document.getElementById('name').value;
+	if ( fnamevar.length < 2 || fnamevar.length > 25)
+	{
+		strMsg = "Name must be between 2 to 25 characters long";
+	}
+	else
+	{
+		strMsg= "OK";
+	}
+	document.getElementById('name-error').innerHTML = strMsg;
+}
+
+function quantitycheck()
+{
+	var x, strMsg;
+	var x = document.getElementById('quantity').value;
+	
+	if(isNaN(x) || x < 1)
+	{
+		strMsg = "enter numbers only dude";
+	}
+	else{
+		strMsg = "Cool!";
+	}
+	document.getElementById('quantity-error').innerHTML = strMsg;
+}
+
+function passcheck()
+{
+	var passvar = document.getElementById('shhpass').value;
+	if ( passvar.length < 8 || passvar.length > 20)
+	{
+		strMsg = "Bro, your password needs to be between 8 and 20 Billion characters long (actually just 8 and 20 characters)";
+	}
+	else
+	{
+		strMsg = "Nice Password";
+	}
+	document.getElementById('pass-error').innerHTML = strMsg;
+}
+
+function bandcheck()
+{
+	var bandItems = document.forms[0].bandchoice;
+	var strMsg = "it's not the end of the world if you don't pick a band, but the site won't work if you don't";
+	for (var i=0; i < bandItems.length; i++)
+	{
+		if(bandItems[i].checked == true)
+		{
+			strMsg = "Yeah, they're ok";
+			break;
+		}
+	}
+	document.getElementById('band-choose-error').innerHTML = strMsg;
+}
+
+function schneidercheck()
+{
+	var schneiderItems = document.forms[0].moviechoice;
+	var strMsg = "Please pick a movie.....or don't it's your choice";
+	for (var i=0; i < schneiderItems.length; i++)
+	{
+		if(schneiderItems[i].checked == true)
+		{
+			strMsg = "Rated PG-13";
+			break;
+		}
+	}
+	document.getElementById('schneider-choose-error').innerHTML = strMsg;
+}
+
+function sandlercheck()
+{
+	if (document.getElementById('sandcheck').checked == false)
+	{
+		strMsg = "yeah, he's not everyone's cup of tea";
+	}
+	else
+	{
+		strMsg = "";
+	}
+	document.getElementById('sanderror').innerHTML = strMsg;	
+}
+
+function jackjilltextcheck()
+{
+	var charsRemaining = 500 - document.getElementById('favthings').value.length;
+	if( document.getElementById('favthings').value.length > 500)
+	{
+		document.getElementById('favthings').value = document.getElementById('favthings').value.substring( 0,500);
+	}
+	else if ( document.getElementById('favthings').value.length < 500)
+	{
+		strMsg = charsRemaining + " characters remaining";
+	}
+	else
+	{
+		strMsg = "";
+	}
+	document.getElementById('remaining').innerHTML = strMsg;
